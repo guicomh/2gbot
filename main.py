@@ -1,5 +1,7 @@
 import discord
 from discord.ext import commands
+from discord.ui import Button
+
 import qrcode
 
 
@@ -11,6 +13,15 @@ intents.message_content = True
 bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 ticket_counter = 1
 
+async def on_message(message):
+    await bot.process_commands(message)
+
+    # Verifica se a mensagem foi enviada em um canal específico (substitua pelo ID do canal desejado)
+    if message.channel.id == 1198779037796012152:
+
+        await asyncio.sleep(2)
+        await message.delete()
+
 @bot.event
 async def on_ready():
     print(f'Logando com {bot.user.name} ({bot.user.id})')
@@ -21,11 +32,12 @@ async def send_fixed_message(ctx):
     fixed_message_content = (
         "Prezados Clientes da 2G Store,\n\n"
         "Esperamos que estejam todos bem. Gostaríamos de informar que agora tornamos mais fácil para vocês solicitar suporte ou assistência técnica.\n\n"
-        "Para criar um ticket, basta digitar **!ticket** neste chat. Estamos aqui para ajudar e resolver qualquer questão que possa surgir. "
+        "Para criar um ticket, basta digitar **!**__***ticket***__ neste chat. Estamos aqui para ajudar e resolver qualquer questão que possa surgir. "
         "Agradecemos pela confiança contínua em nossos serviços e produtos.\n\n"
         "Fiquem à vontade para nos contatar sempre que necessário. Estamos comprometidos em oferecer o melhor atendimento possível."
     )
     await ctx.send(fixed_message_content)
+
 
 
 @bot.command(name='qrcode')
