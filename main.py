@@ -13,16 +13,17 @@ intents.message_content = True
 bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 ticket_counter = 1
 
+
+
+@bot.event
+
 async def on_message(message):
     await bot.process_commands(message)
-
-    # Verifica se a mensagem foi enviada em um canal específico (substitua pelo ID do canal desejado)
     if message.channel.id == 1198779037796012152:
 
         await asyncio.sleep(2)
         await message.delete()
 
-@bot.event
 async def on_ready():
     print(f'Logando com {bot.user.name} ({bot.user.id})')
     print('------')
