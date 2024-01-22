@@ -24,9 +24,11 @@ async def on_message(message):
 
         await message.delete()
 
+@bot.event
 async def on_ready():
     print(f'Logando com {bot.user.name} ({bot.user.id})')
     print('------')
+
 
 @bot.command(name='fix')
 async def send_fixed_message(ctx):
@@ -63,7 +65,6 @@ async def gerar_qrcode_pix(ctx):
     await ctx.send(f"Aqui está o seu QR Code Pix para pagamento no Nubank:")
     await ctx.send(file=discord.File("pix_qrcode.png"))
 
-
 @bot.command(name='ticket')
 async def open_ticket(ctx):
     global ticket_counter
@@ -74,11 +75,71 @@ async def open_ticket(ctx):
 
     await ticket_channel.set_permissions(ctx.author, read_messages=True, send_messages=True)
 
-    await ticket_channel.send(f'Bem-vindo ao seu ticket, {ctx.author.mention}!\nO que você gostaria de comprar?')
+    # Dicionário de produtos com emojis
+    products_available = {
+        "Produto A": "💳",
+        "Produto B": "🎮",
+        "Produto C": "📷",
+        # Adicione mais produtos conforme necessário
+    }
+
+    # Criar a mensagem com a lista de produtos e emojis
+    product_list = "Lista de Produtos Disponíveis:\n\n"
+    for product, emoji in products_available.items():
+        product_list += f"{emoji} {product}\n"
+
+    # Enviar a mensagem com a lista de produtos
+    message = await ticket_channel.send(f'Bem-vindo ao seu ticket, {ctx.author.mention}!\n'
+                                        f'O que você gostaria de comprar?\n\n{product_list}')
+
+    # Adicionar reações aos emojis dos produtos
+    for emoji in products_available.values():
+        await message.add_reaction(emoji)
 
     await ctx.message.delete()
-
     ticket_counter += 1
+
+@bot.event
+async def on_reaction_add(reaction, user):
+    if user.bot:
+        return  # Ignorar reações de bots
+    # Verificar se a reação foi em uma mensagem no canal de ticket
+    if isinstance(reaction.message.channel, discord.TextChannel) and reaction.message.channel.name.startswith('ticket-'):
+        # Verificar se a reação é de um produto
+        products_available = {
+            "Produto A": "💳",
+            "Produto B": "🎮",
+            "Produto C": "📷",
+            # Adicione mais produtos conforme necessário
+        }
+        for product, emoji in products_available.items():
+            if str(reaction.emoji) == emoji:
+                # Gerar e enviar o QR Code para o produto escolhido
+                await generate_and_send_qrcode(reaction.message.channel, user, product)
+                break
+
+async def generate_and_send_qrcode(channel, user, product):
+    email_pix = 'eliseuvasconcellos@gmail.com'
+    url_pagamento_pix = f'pix:nubank.com.br/p/{email_pix}'
+
+    qr = qrcode.QRCode(
+        version=1,
+        box_size=10,
+        border=5
+    )
+    qr.add_data(url_pagamento_pix)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="black", back_color="white")
+
+    img.save(f"{product}_qrcode.png")
+
+    await channel.send(f"{user.mention}, aqui está o QR Code para comprar {product}:")
+    await channel.send(file=discord.File(f"{product}_qrcode.png"))
+
+    await ctx.message.delete()
+    ticket_counter += 1
+
 
 
 
