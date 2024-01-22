@@ -16,12 +16,12 @@ ticket_counter = 1
 
 
 @bot.event
-
 async def on_message(message):
+
     await bot.process_commands(message)
+
     if message.channel.id == 1198779037796012152:
 
-        await asyncio.sleep(2)
         await message.delete()
 
 async def on_ready():
