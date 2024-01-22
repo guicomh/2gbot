@@ -75,6 +75,11 @@ async def open_ticket(ctx):
 
     await ticket_channel.set_permissions(ctx.author, read_messages=True, send_messages=True)
 
+    await ticket_channel.set_permissions(ctx.author, read_messages=True, send_messages=True)
+    for role in guild.roles:
+        if role.permissions.administrator:
+            await ticket_channel.set_permissions(role, read_messages=True, send_messages=True)
+
     # Dicionário de produtos com emojis
     products_available = {
         "Produto A": "💳",
