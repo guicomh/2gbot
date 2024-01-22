@@ -30,13 +30,11 @@ async def send_fixed_message(ctx):
 
 @bot.command(name='qrcode')
 async def gerar_qrcode_pix(ctx):
-    # Substitua 'eliseuvasconcellos@gmail.com' pelo seu e-mail Pix
     email_pix = 'eliseuvasconcellos@gmail.com'
 
-    # Gere a URL de pagamento Pix usando o e-mail como chave para o Nubank
     url_pagamento_pix = f'pix:nubank.com.br/p/{email_pix}'
 
-    # Crie um QR code a partir da URL de pagamento
+
     qr = qrcode.QRCode(
         version=1,
         box_size=10,
@@ -45,13 +43,10 @@ async def gerar_qrcode_pix(ctx):
     qr.add_data(url_pagamento_pix)
     qr.make(fit=True)
 
-    # Crie uma imagem a partir dos dados do QR code
     img = qr.make_image(fill_color="black", back_color="white")
 
-    # Salve a imagem do QR code localmente (opcional)
     img.save("pix_qrcode.png")
 
-    # Envie a imagem do QR code para o canal do Discord
     await ctx.send(f"Aqui está o seu QR Code Pix para pagamento no Nubank:")
     await ctx.send(file=discord.File("pix_qrcode.png"))
 
