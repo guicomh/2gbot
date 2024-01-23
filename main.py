@@ -29,6 +29,23 @@ async def on_ready():
     print(f'Logando com {bot.user.name} ({bot.user.id})')
     print('------')
 
+@bot.command(name='botvenda')
+async def send_fixed_message(ctx):
+    fixed_message_content = (
+        "Prezados Clientes da 2G Store,\n\n"
+        "Infelizmente, para adquirir um bot personalizado, não \n\n"
+        "há um preço fixo. Basta abrir um ticket e marcar o @DEV"
+        "para que possamos responder o mais rápido possível. "
+        "Para criar um ticket, digite **!**__***ticket***__ "
+        "neste chat."
+        "Agradecemos pela confiança contínua em nossos serviços e produtos.\n\n"
+
+        "Atenciosamente,"
+        "2G Store"
+
+     
+    )
+    await ctx.send(fixed_message_content)
 
 @bot.command(name='fix')
 async def send_fixed_message(ctx):
@@ -82,7 +99,7 @@ async def open_ticket(ctx):
 
    
     products_available = {
-        "Produto A": "💳",
+        "Bot Para Discord Personalizado": "💳",
         "Produto B": "🎮",
         "Produto C": "📷",
         # Adicione mais produtos conforme necessário
