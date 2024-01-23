@@ -59,20 +59,7 @@ async def send_fixed_message(ctx):
         "Fiquem à vontade para nos contatar sempre que necessário. Estamos comprometidos em oferecer o melhor atendimento possível."
     )
 
-    button = Button(label="Criar Ticket", style=discord.ButtonStyle.primary, custom_id="create_ticket")
-    view = discord.ui.View()
-    view.add_item(button)
-
-    message = await ctx.send(fixed_message_content, view=view)
-
-@bot.event
-async def on_button_click(interaction):
-    if interaction.custom_id == "create_ticket":
-        await ctx.invoke(bot.get_command('ticket'))
-
-    bot.add_view(view)
-    await asyncio.sleep(60)
-    bot.remove_view(view)
+    await ctx.send(fixed_message_content)
 
 
 @bot.command(name='qrcode')
