@@ -29,16 +29,26 @@ async def on_ready():
     print(f'Logando com {bot.user.name} ({bot.user.id})')
     print('------')
 
+import discord
+from discord.ext import commands
+from discord.ui import Button
+
+
+@bot.event
+async def on_ready():
+    print(f'Bot está online como {bot.user.name}')
+
 @bot.command(name='rockstar')
 async def send_fixed_message(ctx):
     # Criar mensagem
     fixed_message_content = (
+        "´´´"
         "Prezados Clientes da 2G Store,\n\n"
         "Para adquirir uma Conta Rockstar,\n"
-        f"crie um ticket em {ctx.author.mention}.\n "
         "Agradecemos pela confiança contínua em nossos serviços e produtos.\n\n"
         "Atenciosamente,\n\n"
         "**2G Store**"
+        "´´´"
     )
 
     # Criar embed
@@ -51,6 +61,13 @@ async def send_fixed_message(ctx):
 
     # Enviar mensagem com botão
     await ctx.send(embed=embed, view=view)
+
+@bot.event
+async def on_button_click(interaction):
+    if interaction.component.label == "Clique aqui!":
+        # Ação a ser executada quando o botão é clicado
+        await interaction.response.send_message("Você clicou no botão!")
+
 
 
 @bot.command(name='botvenda')
