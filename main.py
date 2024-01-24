@@ -29,6 +29,29 @@ async def on_ready():
     print(f'Logando com {bot.user.name} ({bot.user.id})')
     print('------')
 
+@bot.command(name='rockstar')
+async def send_fixed_message(ctx):
+    # Criar mensagem
+    fixed_message_content = (
+        "Prezados Clientes da 2G Store,\n\n"
+        "Para adquirir uma Conta Rockstar,\n"
+        f"crie um ticket em {ctx.author.mention}.\n "
+        "Agradecemos pela confiança contínua em nossos serviços e produtos.\n\n"
+        "Atenciosamente,\n\n"
+        "**2G Store**"
+    )
+
+    # Criar embed
+    embed = discord.Embed(title="Abrir Ticket de Compras", description=fixed_message_content, color=discord.Color.blue())
+
+    # Adicionar botão
+    button = Button(style=discord.ButtonStyle.green, label="Abrir Ticket")
+    view = discord.ui.View()
+    view.add_item(button)
+
+    # Enviar mensagem com botão
+    await ctx.send(embed=embed, view=view)
+
 
 @bot.command(name='botvenda')
 async def send_fixed_message(ctx):
