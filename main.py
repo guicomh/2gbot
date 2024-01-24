@@ -36,23 +36,28 @@ async def on_ready():
 
 @bot.command(name='rockstar')
 async def send_fixed_message(ctx):
+    # Informações de preço e estoque
+    rockstar_price = "R$ 4,00"
+    rockstar_stock = 2  # Quantidade disponível em estoque
+
     # Criar mensagem
     fixed_message_content = (
-        "Prezados Clientes da 2G Store,\n\n"
-        "Para adquirir uma Conta Rockstar,\n"
+        f"Prezados Clientes da 2G Store,\n\n"
+        f"Para adquirir uma Conta Rockstar\n\n"
+        f"Preço = {rockstar_price}\n"
+        f"Estoque disponível: {rockstar_stock} unidades.\n\n"
         "Agradecemos pela confiança contínua em nossos serviços e produtos.\n\n"
         "Atenciosamente,\n\n"
         "**2G Store**"
     )
 
-    # Criar embed
-    embed = discord.Embed(title="Abrir Ticket de Compras", description=fixed_message_content, color=discord.Color.blue())
+    # Enviar a mensagem
+    await ctx.send(fixed_message_content)
 
-    # Adicionar botão
+    embed = discord.Embed(title="Abrir Ticket de Compras", description=fixed_message_content, color=discord.Color.blue())
     button = Button(style=discord.ButtonStyle.green, label="Abrir Ticket")
     view = discord.ui.View()
     view.add_item(button)
-
     # Enviar mensagem com botão
     await ctx.send(embed=embed, view=view)
 
@@ -133,8 +138,7 @@ async def open_ticket(ctx):
 
     products_available = {
         "Bot Para Discord Personalizado",
-        "Produto B",
-        "Produto C",
+        "Conta Rockstar",
         # Adicione mais produtos conforme necessário
     }
 
@@ -142,8 +146,14 @@ async def open_ticket(ctx):
     for product in products_available:
         product_list += f"{product}\n"
 
+    dono_role = discord.utils.get(guild.roles, name="Dono")
+    if dono_role:
+        await ticket_channel.set_permissions(dono_role, read_messages=True, send_messages=True)
+
     message = await ticket_channel.send(f'Bem-vindo ao seu ticket, {ctx.author.mention}!\n'
-                                        f'O que você gostaria de comprar?\n\n{product_list}')
+                                        f'O que você gostaria de comprar?\n\n{product_list}'
+                                        f'\n\n{dono_role.mention if dono_role else "Cargo de dono não encontrado!"}')
+    
 
     await ctx.message.delete()
     ticket_counter += 1
