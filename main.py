@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from discord.ui import Button
+from discord.ui import Button, View
 import qrcode
 import asyncio
 
@@ -38,7 +38,7 @@ async def on_ready():
 @bot.command(name='rockstar')
 async def send_fixed_message(ctx):
     # Informações de preço e estoque
-    rockstar_price = "R$ 4,00"
+    rockstar_price = "R$ 3,00"
     rockstar_stock = 2  # Quantidade disponível em estoque
 
     # Criar mensagem
@@ -67,32 +67,26 @@ async def send_fixed_message(ctx):
     # Enviar mensagem com embed e botão
     message = await ctx.send(embed=embed, view=view)
 
-    # Adicionar evento de clique do botão
-    @bot.event
-    async def on_button_click(interaction):
-        if interaction.component.label == "Comprar":
-            # Ação a ser executada quando o botão é clicado
-            # Criar um novo canal de compra
-            new_channel_name = f'compra-{ctx.author.name}'
-            guild = ctx.guild
-            new_channel = await guild.create_text_channel(new_channel_name)
 
-            # Configurar permissões para o autor e roles relevantes
-            await new_channel.set_permissions(ctx.author, read_messages=True, send_messages=True)
-            for role in guild.roles:
-                if role.permissions.administrator:
-                    await new_channel.set_permissions(role, read_messages=True, send_messages=True)
+@bot.event
+async def on_button_click(interaction):
+    if interaction.component.label == "Comprar":
+        # Criar um novo canal de compra
+        new_channel_name = f'compra-{interaction.user.name}'
+        guild = interaction.guild
+        new_channel = await guild.create_text_channel(new_channel_name)
 
-            # Enviar uma mensagem inicial no novo canal
-            await new_channel.send(f'Bem-vindo ao canal de compra, {ctx.author.mention}!')
+        # Configurar permissões para o autor e roles relevantes
+        await new_channel.set_permissions(interaction.user, read_messages=True, send_messages=True)
+        for role in guild.roles:
+            if role.permissions.administrator:
+                await new_channel.set_permissions(role, read_messages=True, send_messages=True)
 
-            # Responder ao botão
-            await interaction.response.send_message("Canal de compra criado com sucesso!")
+        # Enviar uma mensagem inicial no novo canal
+        await new_channel.send(f'Bem-vindo ao canal de compra, {interaction.user.mention}!')
 
-    # Aguardar a resposta do botão
-    await bot.wait_for("button_click", check=lambda i: i.message.id == message.id)
-
-
+        # Responder ao botão
+        await interaction.response.send_message("Canal de compra criado com sucesso!")
 
 
 @bot.command(name='botvenda')
@@ -183,5 +177,38 @@ async def open_ticket(ctx):
 
     await ctx.message.delete()
     ticket_counter += 1
+
+
+@bot.command(name='criar_canal')
+async def criar_canal(ctx):
+    # Criar botão para criar canal
+    button = Button(style=discord.ButtonStyle.green, label="Criar Canal", custom_id="criar_canal_button")
+    view = discord.ui.View()
+    view.add_item(button)
+
+    # Enviar mensagem com botão
+    await ctx.send("Clique no botão para criar um novo canal de texto:", view=view)
+
+
+@bot.event
+async def on_button_click(interaction):
+    if interaction.custom_id == "criar_canal_button":
+        # Ação a ser executada quando o botão é clicado
+        # Criar um novo canal de texto
+        new_channel_name = f'canal-{interaction.user.name}'
+        guild = interaction.guild
+        new_channel = await guild.create_text_channel(new_channel_name)
+
+        # Configurar permissões para o autor e roles relevantes
+        await new_channel.set_permissions(interaction.user, read_messages=True, send_messages=True)
+        for role in guild.roles:
+            if role.permissions.administrator:
+                await new_channel.set_permissions(role, read_messages=True, send_messages=True)
+
+        # Enviar uma mensagem inicial no novo canal
+        await new_channel.send(f'Bem-vindo ao seu novo canal, {interaction.user.mention}!')
+
+        # Responder ao botão
+        await interaction.response.send_message("Canal criado com sucesso!")
 
 bot.run('MTE5ODQ0MTc1Njc3NDExMzI5MA.GMFSyc.JwR4YD9x3QXi9dXit90tXjAxiT8ocjRIwxhnyY')
