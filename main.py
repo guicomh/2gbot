@@ -20,7 +20,7 @@ async def on_message(message):
     if message.channel.id == 119877903779601215:  # ID do primeiro canal
         await message.delete()
 
-    if message.channel.id == 1199461061477290054:  # ID do segundo canal
+    if message.channel.id == 119946106147729005:  # ID do segundo canal
         await message.delete()
 
 
@@ -96,17 +96,21 @@ async def send_fixed_message(ctx):
 
     if ticket_channel:
         fixed_message_content = (
-            f"Prezados Clientes da 2G Store,\n\n"
-            "Infelizmente, para adquirir um *bot personalizado*, não \n"
+            "```\n"
+            "Prezados Clientes da 2G Store,\n\n"
+            "Infelizmente, para adquirir um bot personalizado, não \n"
             "há um preço fixo.\n"
-            "Para que possamos responder o mais rápido possível, crie um ticket em {ticket_channel.mention}.\n "
+            f"Para que possamos responder o mais rápido possível, crie um ticket em {ticket_channel.mention}.\n"
             "Agradecemos pela confiança contínua em nossos serviços e produtos.\n\n"
             "Atenciosamente,\n\n"
-            "**2G Store**"
+            "2G Store"
+            "```\n"
         )
         await ctx.send(fixed_message_content, allowed_mentions=discord.AllowedMentions.none())
     else:
-        await ctx.send(f"Canal de ticket não encontrado.")
+        await ctx.send("Canal de ticket não encontrado.")
+
+
 
 @bot.command(name='fix')
 async def send_fixed_message(ctx):
