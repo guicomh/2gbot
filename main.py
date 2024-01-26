@@ -17,7 +17,7 @@ ticket_counter = 1
 async def on_message(message):
     await bot.process_commands(message)
 
-    if message.channel.id == 119877903779601215:  # ID do primeiro canal
+    if message.channel.id == 1198779037796012152 :  # ID do primeiro canal
         await message.delete()
 
     if message.channel.id == 119946106147729005:  # ID do segundo canal
@@ -115,11 +115,17 @@ async def send_fixed_message(ctx):
 @bot.command(name='fix')
 async def send_fixed_message(ctx):
     fixed_message_content = (
+        "```\n"
         "Prezados Clientes da 2G Store,\n\n"
-        "Esperamos que estejam todos bem. Gostaríamos de informar que agora tornamos mais fácil para vocês solicitar suporte ou assistência técnica.\n\n"
-        "Para criar um ticket, basta digitar **!**__***ticket***__ neste chat. Estamos aqui para ajudar e resolver qualquer questão que possa surgir. "
-        "Agradecemos pela confiança contínua em nossos serviços e produtos.\n\n"
-        "Fiquem à vontade para nos contatar sempre que necessário. Estamos comprometidos em oferecer o melhor atendimento possível."
+        "Esperamos que estejam todos bem.\n"
+        "Gostaríamos de informar que agora tornamos mais fácil\n" 
+        "para vocês solicitar suporte ou assistência técnica.\n\n"
+        "Para criar um ticket, basta digitar\n"
+        "!ticket \n" 
+        "neste chat. \n"
+        "Agradecemos pela confiança contínua em nossos"
+        "serviços e produtos.\n\n"
+        "```\n"
     )
 
     await ctx.send(fixed_message_content)
