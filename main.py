@@ -218,4 +218,4 @@ async def on_button_click(interaction):
 
         await interaction.response.send_message("Canal criado com sucesso!")
 
-bot.run('MTE5ODQ0MTc1Njc3NDExMzI5MA.GMFSyc.JwR4YD9x3QXi9dXit90tXjAxiT8ocjRIwxhnyY')
+bot.run('TOKEN DO BOT AQUI')
